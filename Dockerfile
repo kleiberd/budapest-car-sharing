@@ -21,7 +21,6 @@ RUN dep ensure
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/backend
 
 ########### FINAL STAGE ###########
-# start from scratch
 FROM scratch
 
 # copy user credentials, ca certs and static executable
