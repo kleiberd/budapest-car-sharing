@@ -6,7 +6,7 @@ ARG SUBDIR
 LABEL maintainer="David Kleiber <kleiberd93@gmail.com>"
 
 # install dependencies
-RUN apk update && apk add git && apk add ca-certificates
+RUN apk update && apk add git ca-certificates
 
 # create backenduser
 RUN adduser -D -g '' backenduser
@@ -32,6 +32,3 @@ COPY --from=builder /go/bin/$SUBDIR /go/bin/$SUBDIR
 
 # set user
 USER backenduser
-
-# run executable
-ENTRYPOINT ["/go/bin/$SUBDIR"]
