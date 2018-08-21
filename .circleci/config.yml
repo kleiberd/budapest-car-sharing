@@ -13,11 +13,9 @@ jobs:
             - run:
                   name: Build First Stage Container
                   command: |
-                      TAG=$CIRCLE_SHA1.$CIRCLE_BUILD_NUM
-                      docker build --target=builder -t kleiberd93/budapest-car-sharing-backend:$TAG .
+                      docker build --target=builder -t kleiberd93/budapest-car-sharing-backend:$CIRCLE_SHA1 .
 
             - run:
                   name: Run tests
                   command: |
-                      TAG=$CIRCLE_SHA1.$CIRCLE_BUILD_NUM
-                      docker run kleiberd93/budapest-car-sharing-backend:$TAG go test
+                      docker run kleiberd93/budapest-car-sharing-backend:$CIRCLE_SHA1 go test
