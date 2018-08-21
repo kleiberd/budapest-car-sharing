@@ -1,0 +1,11 @@
+TEXT_FORMAT_BOLD = `tput bold`
+TEXT_FORMAT_NORMAL = `tput sgr0`
+
+CMD_ENV = /usr/bin/env
+
+CMD_CIRCLECI = $(CMD_ENV) circleci
+CMD_CIRCLECI_BUILD = $(CMD_CIRCLECI) build
+
+CMD_DOCKER = $(CMD_ENV) docker
+CMD_DOCKER_BUILD = $(CMD_DOCKER) build
+CMD_DOCKER_RUN = $(CMD_DOCKER) run

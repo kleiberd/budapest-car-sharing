@@ -6,16 +6,15 @@ machine:
 
 jobs:
     build:
-        machine:
-            docker_layer_caching: true
+        machine: true
         steps:
             - checkout
             - run:
                   name: Build First Stage Container
                   command: |
-                      docker build --target=builder -t kleiberd93/budapest-car-sharing-backend:$CIRCLE_SHA1 .
+                      make DOCKER_TAG=$CIRCLE_SHA1 docker-build-builder-api
 
             - run:
                   name: Run tests
                   command: |
-                      docker run kleiberd93/budapest-car-sharing-backend:$CIRCLE_SHA1 go test
+                      make DOCKER_TAG=$CIRCLE_SHA1 docker-run-tests-api
