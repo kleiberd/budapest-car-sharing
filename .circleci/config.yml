@@ -10,11 +10,19 @@ jobs:
         steps:
             - checkout
             - run:
-                  name: Build First Stage Container
-                  command: |
-                      make DOCKER_TAG=$CIRCLE_SHA1 docker-build-builder-api
+                name: Build First Stage Container
+                command: |
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-build-builder-api
 
             - run:
-                  name: Run tests
-                  command: |
-                      make DOCKER_TAG=$CIRCLE_SHA1 docker-run-tests-api
+                name: Run tests
+                command: |
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-run-tests-api
+
+            - run:
+                name: Copy artifact
+                command: |
+                    make DOCKER_TAG=$CIRCLE_SHA1 DOCKER_RUN_PARAMS=--volume="/artifacts/":"/artifacts/" docker-copy-artifact-api
+
+            - store_artifacts:
+                path: /artifacts/api
