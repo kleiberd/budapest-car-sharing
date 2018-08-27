@@ -7,5 +7,7 @@ PATH_MISC = $(PATH_ROOT)/misc
 include $(PATH_MISC)/Variables.mk
 include $(PATH_MISC)/Docker.mk
 include $(PATH_MISC)/CircleCI.mk
+include $(PATH_MISC)/Packer.mk
+include $(PATH_MISC)/Terraform.mk
 
-help: help-circleci help-docker
+help: help-circleci help-docker help-packer

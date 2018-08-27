@@ -1,0 +1,36 @@
+{
+  "variables": {
+    "image": "ubuntu-18-04-x64",
+    "k8s_version": "1.11.0-00"
+  },
+  "builders": [
+    {
+      "type": "digitalocean",
+      "image": "{{user `image`}}",
+      "region": "fra1",
+      "size": "1gb",
+      "ssh_username": "root",
+      "snapshot_name": "bcsb-k8s-{{user `k8s_version`}}-{{user `image`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "./shell/prepare-image.sh"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "manifest.json",
+      "strip_path": true
+    },
+    {
+      "type": "shell-local",
+      "inline": [
+        "cat manifest.json | jq -r '.builds[-1].artifact_id' | cut -d':' -f2 | xargs echo -n > bcsb-image.id",
+        "rm manifest.json"
+      ]
+    }
+  ]
+}
