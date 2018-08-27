@@ -21,16 +21,8 @@ resource "digitalocean_droplet" "bcsb-master" {
       user = "root"
     }
     inline = [
-      "sudo kubeadm init --token=${var.k8s_token} --apiserver-advertise-address=${digitalocean_droplet.bcsb-master.ipv4_address_private}",
+      "kubeadm init --token=${var.k8s_token}",
 
-      "mkdir -p $HOME/.kube",
-      "sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config",
-      "sudo chown $(id -u):$(id -g) $HOME/.kube/config",
-
-      "sudo systemctl daemon-reload",
-      "sudo systemctl restart kubelet.service",
-
-      # Install Weave networking plugin
       "export KUBECONFIG=/etc/kubernetes/admin.conf",
 
       "kubectl apply -f \"https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')\"",

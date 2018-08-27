@@ -17,7 +17,7 @@ cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 apt-get update
-apt-get install -y kubernetes-cni kubelet kubeadm kubectl
+apt-get install -y kubelet=1.11.2-00 kubeadm=1.11.2-00 kubectl=1.11.2-00
 
 echo "Set IPTables config for Weave networking"
 sysctl net.bridge.bridge-nf-call-iptables=1

@@ -15,14 +15,14 @@ resource "digitalocean_droplet" "bcsb-worker" {
       user = "root"
     }
     inline = [
-      "sudo kubeadm join --token=${var.k8s_token} --discovery-token-unsafe-skip-ca-verification ${digitalocean_droplet.bcsb-master.ipv4_address_private}:6443",
+      "kubeadm join --token=${var.k8s_token} ${digitalocean_droplet.bcsb-master.ipv4_address_private}:6443 --discovery-token-unsafe-skip-ca-verification"
     ]
   }
 }
 
 output "workers_ips" {
-  value = "${digitalocean_droplet.bcsb-master.*.ipv4_address}"
+  value = "${digitalocean_droplet.bcsb-worker.*.ipv4_address}"
 }
 output "workers_ips_private" {
-  value = "${digitalocean_droplet.bcsb-master.*.ipv4_address_private}"
+  value = "${digitalocean_droplet.bcsb-worker.*.ipv4_address_private}"
 }
