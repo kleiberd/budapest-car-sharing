@@ -27,7 +27,13 @@ resource "digitalocean_droplet" "bcsb-master" {
       "sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config",
       "sudo chown $(id -u):$(id -g) $HOME/.kube/config",
 
-      "kubectl get pods --all-namespaces",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl restart kubelet.service",
+
+      # Install Weave networking plugin
+      "export KUBECONFIG=/etc/kubernetes/admin.conf",
+
+      "kubectl apply -f \"https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')\"",
     ]
   }
 }
