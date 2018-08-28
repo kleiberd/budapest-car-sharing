@@ -1,10 +1,25 @@
+variable "region" {
+  description = "Digitalocean region"
+  default = "fra1"
+}
+
+variable "size" {
+  description = "Digitalocean droplet size"
+  default = "2gb"
+}
+
 variable "ssh_public_key" {
   description = "SSH public key to add to droplets"
   default = "~/.ssh/bcsb_id_rsa.pub"
 }
 
+variable "ssh_private_key" {
+  description = "SSH private key to add to droplets"
+  default = "~/.ssh/bcsb_id_rsa"
+}
+
 variable "image_id" {
-  description = "DigitalOcean Image ID"
+  description = "Digitalocean Image ID"
 }
 
 variable "k8s_token" {
