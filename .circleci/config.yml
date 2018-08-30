@@ -26,3 +26,9 @@ jobs:
 
             - store_artifacts:
                 path: /artifacts/api
+
+            - run:
+                name: Push Docker image
+                command: |
+                    make DOCKER_USER=$DOCKERHUB_USER DOCKER_PASS=$DOCKERHUB_PASSWORD docker-login
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-push

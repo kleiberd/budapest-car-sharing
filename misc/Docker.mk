@@ -1,10 +1,14 @@
 CMD_DOCKER = docker
 CMD_DOCKER_BUILD = $(CMD_DOCKER) build
 CMD_DOCKER_RUN = $(CMD_DOCKER) run
+CMD_DOCKER_LOGIN = $(CMD_DOCKER) login
+CMD_DOCKER_PUSH = $(CMD_DOCKER) push
 
 DOCKER = $(shell which $(CMD_DOCKER) 2> /dev/null)
 
 DOCKER_BUILD_PARAMS ?=
+DOCKER_USER ?=
+DOCKER_PASS ?=
 DOCKER_TAG = latest
 
 DOCKER_NAME = kleiberd/budapest-car-sharing-backend-$1
@@ -46,6 +50,12 @@ docker-run-collector:
 
 docker-copy-artifact-api:
 	$(call docker,$(call DOCKER_RUN_FN,api,/bin/sh -c "$(CMD_MKDIR) artifacts && $(CMD_CP) /go/bin/api /artifacts/api"))
+
+docker-login:
+	$(call docker,$(CMD_DOCKER_LOGIN) -u $(DOCKER_USER) -p $(DOCKER_PASS))
+
+docker-push:
+	$(call docker,$(CMD_DOCKER_PUSH) $(DOCKER_NAME):$(DOCKER_TAG))
 
 help-docker:
 	@echo "$(TEXT_FORMAT_BOLD)docker-build-api$(TEXT_FORMAT_NORMAL)				- Build full API container"
