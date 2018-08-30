@@ -14,6 +14,7 @@ DOCKER_TAG = latest
 DOCKER_NAME = kleiberd/budapest-car-sharing-backend-$1
 DOCKER_BUILD_FN = $(CMD_DOCKER_BUILD) $(DOCKER_BUILD_PARAMS) --build-arg SUBDIR=$1 -t $(DOCKER_NAME):$(DOCKER_TAG) .
 DOCKER_RUN_FN = $(CMD_DOCKER_RUN) $(DOCKER_RUN_PARAMS) $(DOCKER_NAME):$(DOCKER_TAG) $2
+DOCKER_PUSH_FN = $(CMD_DOCKER_PUSH) $(DOCKER_NAME):$(DOCKER_TAG)
 
 define docker
 	$(if $(DOCKER),,$(error "Docker is required (https://docs.docker.com/install/)"))
@@ -55,7 +56,7 @@ docker-login:
 	$(call docker, echo "$(DOCKER_PASS)" | $(CMD_DOCKER_LOGIN) -u $(DOCKER_USER) --password-stdin)
 
 docker-push:
-	$(call docker,$(CMD_DOCKER_PUSH) $(DOCKER_NAME):$(DOCKER_TAG))
+	$(call docker,$(call DOCKER_PUSH_FN,api))
 
 help-docker:
 	@echo "$(TEXT_FORMAT_BOLD)docker-build-api$(TEXT_FORMAT_NORMAL)				- Build full API container"
