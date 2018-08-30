@@ -52,7 +52,7 @@ docker-copy-artifact-api:
 	$(call docker,$(call DOCKER_RUN_FN,api,/bin/sh -c "$(CMD_MKDIR) artifacts && $(CMD_CP) /go/bin/api /artifacts/api"))
 
 docker-login:
-	$(call docker, echo '$(DOCKER_PASS)' | $(CMD_DOCKER_LOGIN) -u $(DOCKER_USER) --password-stdin)
+	$(call docker, echo "$(DOCKER_PASS)" | $(CMD_DOCKER_LOGIN) -u $(DOCKER_USER) --password-stdin)
 
 docker-push:
 	$(call docker,$(CMD_DOCKER_PUSH) $(DOCKER_NAME):$(DOCKER_TAG))
