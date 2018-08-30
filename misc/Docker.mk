@@ -3,6 +3,7 @@ CMD_DOCKER_BUILD = $(CMD_DOCKER) build
 CMD_DOCKER_RUN = $(CMD_DOCKER) run
 CMD_DOCKER_LOGIN = $(CMD_DOCKER) login
 CMD_DOCKER_PUSH = $(CMD_DOCKER) push
+CMD_DOCKER_TAG = $(CMD_DOCKER) tag
 
 DOCKER = $(shell which $(CMD_DOCKER) 2> /dev/null)
 
@@ -15,6 +16,7 @@ DOCKER_NAME = kleiberd/budapest-car-sharing-backend-$1
 DOCKER_BUILD_FN = $(CMD_DOCKER_BUILD) $(DOCKER_BUILD_PARAMS) --build-arg SUBDIR=$1 -t $(DOCKER_NAME):$(DOCKER_TAG) .
 DOCKER_RUN_FN = $(CMD_DOCKER_RUN) $(DOCKER_RUN_PARAMS) $(DOCKER_NAME):$(DOCKER_TAG) $2
 DOCKER_PUSH_FN = $(CMD_DOCKER_PUSH) $(DOCKER_NAME):$(DOCKER_TAG)
+DOCKER_TAG_FN = $(CMD_DOCKER_TAG) $(DOCKER_NAME):$(DOCKER_TAG) $(DOCKER_NAME):$(DOCKER_TAG)
 
 define docker
 	$(if $(DOCKER),,$(error "Docker is required (https://docs.docker.com/install/)"))
@@ -54,6 +56,9 @@ docker-copy-artifact-api:
 
 docker-login:
 	$(call docker, echo "$(DOCKER_PASS)" | $(CMD_DOCKER_LOGIN) -u $(DOCKER_USER) --password-stdin)
+
+docker-tag:
+	$(call docker,$(call DOCKER_TAG_FN,api))
 
 docker-push:
 	$(call docker,$(call DOCKER_PUSH_FN,api))
