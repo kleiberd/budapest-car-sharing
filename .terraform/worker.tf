@@ -1,5 +1,5 @@
 resource "digitalocean_droplet" "bcsb-worker" {
-  count = 2
+  count = "${var.k8s_workers_count}"
   name = "bcsb-worker-${count.index}"
 
   image = "${var.image_id}"
@@ -12,6 +12,8 @@ resource "digitalocean_droplet" "bcsb-worker" {
 }
 
 resource "null_resource" "bcsb-worker" {
+  count = "${var.k8s_workers_count}"
+
   triggers {
     cluster_ids = "${join(",", digitalocean_droplet.bcsb-worker.*.ipv4_address_private)},${null_resource.bcsb-master.id}"
   }

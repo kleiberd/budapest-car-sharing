@@ -26,3 +26,8 @@ variable "k8s_token" {
   description = "Kubeadm token to use for joining clusters"
   default = "px42ot.m26596nf0z9livpg"
 }
+
+variable "k8s_workers_count" {
+  description = "Number of Kubernetes worker nodes"
+  default = 2
+}
