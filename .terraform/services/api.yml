@@ -9,28 +9,28 @@ spec:
     externalIPs:
     - "${external_ip}"
     selector:
-        app: nginx-example
+        app: bcsb-api
     ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 8080
 
 ---
-apiVersion: extensions/v1beta1
 kind: Deployment
+apiVersion: extensions/v1beta1
 metadata:
-    name: nginx-example
+    name: budapest-car-sharing-backend-api
 spec:
     replicas: 2
     template:
         metadata:
             labels:
-                app: nginx-example
+                app: bcsb-api
         spec:
             containers:
-            - name: nginx
-              image: nginx
+            - name: budapest-car-sharing-backend-api
+              image: kleiberd/budapest-car-sharing-backend-api
+              command: ["/go/bin/api"]
               ports:
-              - containerPort: 80
-                protocol: TCP
+              - containerPort: 8080

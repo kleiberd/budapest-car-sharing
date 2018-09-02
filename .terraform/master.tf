@@ -5,8 +5,8 @@ resource "digitalocean_ssh_key" "default" {
   public_key = "${file("${var.ssh_public_key}")}"
 }
 
-data "template_file" "http-nginx" {
-  template = "${file("./services/http-nginx.yml")}"
+data "template_file" "api" {
+  template = "${file("./services/api.yml")}"
 
   vars {
     external_ip = "${digitalocean_droplet.bcsb-master.ipv4_address}"
@@ -37,8 +37,8 @@ resource "null_resource" "bcsb-master" {
       private_key = "${file("${var.ssh_private_key}")}"
     }
 
-    content     = "${data.template_file.http-nginx.rendered}"
-    destination = "/tmp/http-nginx.yml"
+    content     = "${data.template_file.api.rendered}"
+    destination = "/tmp/api.yml"
   }
 
   provisioner "remote-exec" {
@@ -55,7 +55,7 @@ resource "null_resource" "bcsb-master" {
 
       "kubectl apply -f \"https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')\"",
 
-      "kubectl apply -f /tmp/http-nginx.yml",
+      "kubectl apply -f /tmp/api.yml",
     ]
   }
 }
