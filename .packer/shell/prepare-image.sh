@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Install Digital Ocean Monitoring"
+echo "Install DigitalOcean Monitoring"
 curl -sSL https://agent.digitalocean.com/install.sh | sh
 
 echo "Install Docker"
