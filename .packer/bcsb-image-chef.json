@@ -25,7 +25,8 @@
       ],
       "run_list": [
         "recipe[kubernetes::digitalocean]",
-        "recipe[kubernetes::docker]"
+        "recipe[kubernetes::docker]",
+        "recipe[kubernetes::kubernetes]"
       ]
     }
   ],

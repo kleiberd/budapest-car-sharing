@@ -21,4 +21,5 @@ suites:
       - recipe[kubernetes::default]
       - recipe[kubernetes::digitalocean]
       - recipe[kubernetes::docker]
+      - recipe[kubernetes::kubernetes]
     attributes:

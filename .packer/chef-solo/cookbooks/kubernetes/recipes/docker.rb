@@ -1,6 +1,6 @@
 #
 # Cookbook:: kubernetes
-# Recipe:: digitalocean
+# Recipe:: docker
 #
 # Copyright:: 2018, David Kleiber, All Rights Reserved.
 
@@ -9,11 +9,7 @@ execute 'echo' do
   action :run
 end
 
-execute 'update-upgrade' do
-  command 'apt-get update'
-  action :run
-end
-
-package %w(apt-transport-https ca-certificates curl software-properties-common) do
-  action :install
+docker_installation_package 'default' do
+  version '17.03.0'
+  action :create
 end
