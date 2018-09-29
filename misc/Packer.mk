@@ -27,5 +27,5 @@ packer-build-chef:
 	$(call packer, $(CMD_PACKER_BUILD) $(PATH_BUILD_FILE_CHEF))
 
 help-packer:
-	@echo "$(TEXT_FORMAT_BOLD)packer-build-shell$(TEXT_FORMAT_NORMAL)					- Build base image for Terraform with Packer (Shell provision)"
-	@echo "$(TEXT_FORMAT_BOLD)packer-build-chef$(TEXT_FORMAT_NORMAL)					- Build base image for Terraform with Packer (Chef-Solo provision)"
+	@echo "$(TEXT_FORMAT_BOLD)packer-build-shell$(TEXT_FORMAT_NORMAL)				- Build base image for Terraform with Packer (Shell provision)"
+	@echo "$(TEXT_FORMAT_BOLD)packer-build-chef$(TEXT_FORMAT_NORMAL)				- Build base image for Terraform with Packer (Chef-Solo provision)"
