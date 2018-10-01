@@ -1,7 +1,7 @@
 package greengo
 
 import (
-	p "budapest-car-sharing-backend/collector/providers"
+	"budapest-car-sharing-backend/collector/providers"
 	"encoding/json"
 	"fmt"
 	"math/rand"
@@ -17,43 +17,40 @@ const (
 	referer      = "https://www.greengo.hu/"
 )
 
-func Provide() ([]p.Vehicle, error) {
-	data, err := getResponseData()
-	if nil != err {
-		return nil, err
-	}
-
-	var vehicles []p.Vehicle
-	for _, value := range data {
-		transformedVehicle, _ := Transform(value)
-		vehicles = append(vehicles, transformedVehicle)
-	}
-
-	return vehicles, nil
+type Provider struct {
+	client *providers.Client
 }
 
-func getResponseData() ([]Vehicle, error) {
-	var vehicles []Vehicle
+func NewProvider() *Provider {
+	return &Provider{client: providers.NewClient(generateURL())}
+}
 
-	c := p.NewClient(generateUrl())
+func (p *Provider) GetVehicles() ([]providers.Vehicle, error) {
+	var response []Vehicle
+	var vehicles []providers.Vehicle
 
-	req, err := c.GetRequest(getHeader())
+	req, err := p.client.GetRequest(getHeader())
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := c.SendRequest(req)
+	resp, err := p.client.SendRequest(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&vehicles)
+	err = json.NewDecoder(resp.Body).Decode(&response)
+
+	for _, value := range response {
+		transformedVehicle, _ := Transform(value)
+		vehicles = append(vehicles, transformedVehicle)
+	}
 
 	return vehicles, err
 }
 
-func generateUrl() string {
+func generateURL() string {
 	source := rand.NewSource(time.Now().UnixNano())
 	timestamp := fmt.Sprintf("%d", time.Now().UnixNano())
 

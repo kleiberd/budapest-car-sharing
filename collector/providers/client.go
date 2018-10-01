@@ -15,10 +15,6 @@ type Client struct {
 	UserAgent   string
 }
 
-type ProviderClient interface {
-	getResponseData() ([]Vehicle, error)
-}
-
 func NewClient(endpointURL string) *Client {
 	httpClient := http.DefaultClient
 
