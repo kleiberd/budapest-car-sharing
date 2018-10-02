@@ -4,25 +4,25 @@ import (
 	p "budapest-car-sharing-backend/collector/providers"
 )
 
-func Transform(vehicle Vehicle) (p.Vehicle, error) {
-	modelMap := map[int]map[string]string{
-		14: {
-			p.BRAND:    "Volkswagen",
-			p.MODEL:    p.EUP,
-			p.FUELTYPE: p.ELECTRIC,
-		},
-		15: {
-			p.BRAND:    "Volkswagen",
-			p.MODEL:    "Up",
-			p.FUELTYPE: p.PETROL,
-		},
-		18: {
-			p.BRAND:    "Mercedes",
-			p.MODEL:    "A200",
-			p.FUELTYPE: p.PETROL,
-		},
-	}
+var modelMap = map[int]map[string]string{
+	14: {
+		p.BRAND:    "Volkswagen",
+		p.MODEL:    p.EUP,
+		p.FUELTYPE: p.ELECTRIC,
+	},
+	15: {
+		p.BRAND:    "Volkswagen",
+		p.MODEL:    "Up",
+		p.FUELTYPE: p.PETROL,
+	},
+	18: {
+		p.BRAND:    "Mercedes",
+		p.MODEL:    "A200",
+		p.FUELTYPE: p.PETROL,
+	},
+}
 
+func Transform(vehicle Vehicle) (p.Vehicle, error) {
 	transformedVehicle := p.Vehicle{
 		ExternalID: vehicle.Description.ID,
 		Provider:   providerName,
