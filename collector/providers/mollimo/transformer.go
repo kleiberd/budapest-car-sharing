@@ -22,7 +22,27 @@ var modelMap = map[int]map[string]string{
 	},
 }
 
-func Transform(vehicle Vehicle) (p.Vehicle, error) {
+type Transformer struct {
+	responseData []Vehicle
+}
+
+func NewTransformer(responseData []Vehicle) *Transformer {
+	return &Transformer{
+		responseData: responseData,
+	}
+}
+
+func (t *Transformer) Transform() ([]p.Vehicle, error) {
+	var vehicles []p.Vehicle
+
+	for _, value := range t.responseData {
+		vehicles = append(vehicles, t.transformItem(value))
+	}
+
+	return vehicles, nil
+}
+
+func (t *Transformer) transformItem(vehicle Vehicle) p.Vehicle {
 	transformedVehicle := p.Vehicle{
 		ExternalID: vehicle.Description.ID,
 		Provider:   providerName,
@@ -36,5 +56,5 @@ func Transform(vehicle Vehicle) (p.Vehicle, error) {
 		Range:      vehicle.Status.EnergyLevel,
 	}
 
-	return transformedVehicle, nil
+	return transformedVehicle
 }

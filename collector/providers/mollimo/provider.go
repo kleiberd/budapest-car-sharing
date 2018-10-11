@@ -3,8 +3,6 @@ package mollimo
 import (
 	"budapest-car-sharing-backend/collector/providers"
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
 	"strings"
 )
 
@@ -14,46 +12,25 @@ const (
 	referer      = "https://www.mollimo.hu/"
 )
 
-type Provider struct {
+type provider struct {
 	client *providers.Client
 }
 
-func NewProvider() *Provider {
-	return &Provider{client: providers.NewClient(endpointURL)}
+func NewProvider() *provider {
+	return &provider{client: providers.NewClient(endpointURL, referer, nil)}
 }
 
-func (p *Provider) GetVehicles() ([]providers.Vehicle, error) {
-	var response []Vehicle
-	var vehicles []providers.Vehicle
+func (p *provider) GetVehicles() ([]providers.Vehicle, error) {
+	var responseData []Vehicle
 
-	req, err := p.client.GetRequest(getHeader())
-	if err != nil {
+	responseBytes, _ := p.client.SendRequest()
+	responseString := string(responseBytes)
+	responseString = strings.Replace(responseString, "window.cars = ", "", -1)
+
+	err := json.Unmarshal([]byte(responseString), &responseData)
+	if nil != err {
 		return nil, err
 	}
 
-	resp, err := p.client.SendRequest(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
-	bodyString := string(bodyBytes)
-	bodyString = strings.Replace(bodyString, "window.cars = ", "", -1)
-
-	err = json.Unmarshal([]byte(bodyString), &response)
-
-	for _, value := range response {
-		transformedVehicle, _ := Transform(value)
-		vehicles = append(vehicles, transformedVehicle)
-	}
-
-	return vehicles, err
-}
-
-func getHeader() *http.Header {
-	header := http.Header{}
-	header.Set("Referer", referer)
-
-	return &header
+	return NewTransformer(responseData).Transform()
 }

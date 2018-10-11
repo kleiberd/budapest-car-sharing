@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -17,37 +16,30 @@ const (
 	referer      = "https://www.greengo.hu/"
 )
 
-type Provider struct {
+var header = map[string]string{
+	"X-Requested-With": "XMLHttpRequest",
+}
+
+type provider struct {
 	client *providers.Client
 }
 
-func NewProvider() *Provider {
-	return &Provider{client: providers.NewClient(generateURL())}
+func NewProvider() *provider {
+	return &provider{client: providers.NewClient(generateURL(), referer, header)}
 }
 
-func (p *Provider) GetVehicles() ([]providers.Vehicle, error) {
-	var response []Vehicle
-	var vehicles []providers.Vehicle
+func (p *provider) GetVehicles() ([]providers.Vehicle, error) {
+	var responseData []Vehicle
 
-	req, err := p.client.GetRequest(getHeader())
-	if err != nil {
+	response, err := p.client.SendRequest()
+
+	err = json.Unmarshal([]byte(response), &responseData)
+
+	if nil != err {
 		return nil, err
 	}
 
-	resp, err := p.client.SendRequest(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(&response)
-
-	for _, value := range response {
-		transformedVehicle, _ := Transform(value)
-		vehicles = append(vehicles, transformedVehicle)
-	}
-
-	return vehicles, err
+	return NewTransformer(responseData).Transform()
 }
 
 func generateURL() string {
@@ -58,12 +50,4 @@ func generateURL() string {
 	url = strings.Replace(url, "{{TIMESTAMP}}", timestamp[0:len(timestamp)-6], -1)
 
 	return url
-}
-
-func getHeader() *http.Header {
-	header := http.Header{}
-	header.Set("X-Requested-With", "XMLHttpRequest")
-	header.Set("Referer", referer)
-
-	return &header
 }

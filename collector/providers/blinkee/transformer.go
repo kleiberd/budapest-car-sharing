@@ -5,7 +5,27 @@ import (
 	"fmt"
 )
 
-func Transform(vehicle Vehicle) (p.Vehicle, error) {
+type Transformer struct {
+	responseData []Vehicle
+}
+
+func NewTransformer(responseData []Vehicle) *Transformer {
+	return &Transformer{
+		responseData: responseData,
+	}
+}
+
+func (t *Transformer) Transform() ([]p.Vehicle, error) {
+	var vehicles []p.Vehicle
+
+	for _, value := range t.responseData {
+		vehicles = append(vehicles, t.transformItem(value))
+	}
+
+	return vehicles, nil
+}
+
+func (t *Transformer) transformItem(vehicle Vehicle) p.Vehicle {
 	transformedVehicle := p.Vehicle{
 		ExternalID: fmt.Sprintf("%d", vehicle.ID),
 		Provider:   providerName,
@@ -17,5 +37,5 @@ func Transform(vehicle Vehicle) (p.Vehicle, error) {
 		Model:      "Scooter",
 	}
 
-	return transformedVehicle, nil
+	return transformedVehicle
 }

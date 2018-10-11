@@ -1,6 +1,7 @@
 package providers
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -10,37 +11,61 @@ const (
 )
 
 type Client struct {
-	client      *http.Client
-	EndpointURL *url.URL
-	UserAgent   string
+	client *http.Client
+
+	endpointURL *url.URL
+	userAgent   string
+	referer     string
+	header      map[string]string
 }
 
-func NewClient(endpointURL string) *Client {
+func NewClient(endpointURL string, referer string, header map[string]string) *Client {
 	httpClient := http.DefaultClient
 
 	EndpointURL, _ := url.Parse(endpointURL)
 
-	c := &Client{client: httpClient, EndpointURL: EndpointURL, UserAgent: userAgent}
+	c := &Client{
+		client:      httpClient,
+		endpointURL: EndpointURL,
+		userAgent:   userAgent,
+		referer:     referer,
+		header:      header,
+	}
 
 	return c
 }
 
-func (c *Client) GetRequest(header *http.Header) (*http.Request, error) {
-	req, err := http.NewRequest("GET", c.EndpointURL.String(), nil)
+func (c *Client) SendRequest() ([]byte, error) {
+	req, err := c.getRequest()
 	if err != nil {
 		return nil, err
 	}
 
-	if nil != header {
-		req.Header = *header
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
 	}
+	defer resp.Body.Close()
+
+	return ioutil.ReadAll(resp.Body)
+}
+
+func (c *Client) getRequest() (*http.Request, error) {
+	req, err := http.NewRequest("GET", c.endpointURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Accept-Language", "hu,en-US;q=0.9,en;q=0.8")
 	req.Header.Set("Connection", "keep-alive")
+	req.Header.Set("Referer", c.referer)
+
+	if nil != c.header {
+		for key, value := range c.header {
+			req.Header.Set(key, value)
+		}
+	}
 
 	return req, nil
-}
-
-func (c *Client) SendRequest(req *http.Request) (*http.Response, error) {
-	return c.client.Do(req)
 }
