@@ -1,24 +1,25 @@
 package mollimo
 
 import (
+	"budapest-car-sharing-backend/collector/domain"
 	p "budapest-car-sharing-backend/collector/providers"
 )
 
 var modelMap = map[int]map[string]string{
 	14: {
-		p.BRAND:    "Volkswagen",
-		p.MODEL:    p.EUP,
-		p.FUELTYPE: p.ELECTRIC,
+		p.Brand:    "Volkswagen",
+		p.Model:    p.EUp,
+		p.FuelType: p.Electric,
 	},
 	15: {
-		p.BRAND:    "Volkswagen",
-		p.MODEL:    "Up",
-		p.FUELTYPE: p.PETROL,
+		p.Brand:    "Volkswagen",
+		p.Model:    "Up",
+		p.FuelType: p.Petrol,
 	},
 	18: {
-		p.BRAND:    "Mercedes",
-		p.MODEL:    "A200",
-		p.FUELTYPE: p.PETROL,
+		p.Brand:    "Mercedes",
+		p.Model:    "A200",
+		p.FuelType: p.Petrol,
 	},
 }
 
@@ -32,8 +33,8 @@ func NewTransformer(responseData []Vehicle) *Transformer {
 	}
 }
 
-func (t *Transformer) Transform() ([]p.Vehicle, error) {
-	var vehicles []p.Vehicle
+func (t *Transformer) Transform() ([]domain.Vehicle, error) {
+	var vehicles []domain.Vehicle
 
 	for _, value := range t.responseData {
 		vehicles = append(vehicles, t.transformItem(value))
@@ -42,17 +43,17 @@ func (t *Transformer) Transform() ([]p.Vehicle, error) {
 	return vehicles, nil
 }
 
-func (t *Transformer) transformItem(vehicle Vehicle) p.Vehicle {
-	transformedVehicle := p.Vehicle{
+func (t *Transformer) transformItem(vehicle Vehicle) domain.Vehicle {
+	transformedVehicle := domain.Vehicle{
 		ExternalID: vehicle.Description.ID,
 		Provider:   providerName,
 		Latitude:   vehicle.Location.Position.Lat,
 		Longitude:  vehicle.Location.Position.Lon,
-		Type:       p.CAR,
-		FuelType:   modelMap[vehicle.Description.ModelID][p.FUELTYPE],
-		Brand:      modelMap[vehicle.Description.ModelID][p.BRAND],
-		Model:      modelMap[vehicle.Description.ModelID][p.MODEL],
-		Plate:      vehicle.Description.Name,
+		Type:       p.Car,
+		FuelType:   modelMap[vehicle.Description.ModelID][p.FuelType],
+		Brand:      modelMap[vehicle.Description.ModelID][p.Brand],
+		Model:      modelMap[vehicle.Description.ModelID][p.Model],
+		Plate:      vehicle.Description.Name[0:6],
 		Range:      vehicle.Status.EnergyLevel,
 	}
 

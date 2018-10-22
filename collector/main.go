@@ -1,15 +1,18 @@
 package main
 
 import (
-	"budapest-car-sharing-backend/collector/providers/blinkee"
-	"budapest-car-sharing-backend/collector/providers/greengo"
-	"budapest-car-sharing-backend/collector/providers/mollimo"
-
-	"github.com/davecgh/go-spew/spew"
+	"budapest-car-sharing-backend/collector/infrastucture"
+	"budapest-car-sharing-backend/collector/services"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/micro/go-config"
+	"github.com/micro/go-config/source/env"
 )
 
 func main() {
-	spew.Dump(mollimo.NewProvider().GetVehicles())
-	spew.Dump(greengo.NewProvider().GetVehicles())
-	spew.Dump(blinkee.NewProvider().GetVehicles())
+	config.Load(env.NewSource())
+
+	database := infrastucture.NewDatabase()
+	defer database.Connection.Close()
+
+	services.NewCollector(database).Collect()
 }

@@ -1,6 +1,7 @@
 package greengo
 
 import (
+	"budapest-car-sharing-backend/collector/domain"
 	p "budapest-car-sharing-backend/collector/providers"
 	"strconv"
 )
@@ -15,8 +16,8 @@ func NewTransformer(responseData []Vehicle) *Transformer {
 	}
 }
 
-func (t *Transformer) Transform() ([]p.Vehicle, error) {
-	var vehicles []p.Vehicle
+func (t *Transformer) Transform() ([]domain.Vehicle, error) {
+	var vehicles []domain.Vehicle
 
 	for _, value := range t.responseData {
 		vehicles = append(vehicles, t.transformItem(value))
@@ -25,22 +26,22 @@ func (t *Transformer) Transform() ([]p.Vehicle, error) {
 	return vehicles, nil
 }
 
-func (t *Transformer) transformItem(vehicle Vehicle) p.Vehicle {
+func (t *Transformer) transformItem(vehicle Vehicle) domain.Vehicle {
 	latitude, _ := strconv.ParseFloat(vehicle.GpsLat, 64)
 	longitude, _ := strconv.ParseFloat(vehicle.GpsLong, 64)
-	estimatedRange, _ := strconv.ParseInt(vehicle.EstimatedKm, 10, 2)
+	estimatedRange, _ := strconv.Atoi(vehicle.EstimatedKm)
 
-	transformedVehicle := p.Vehicle{
+	transformedVehicle := domain.Vehicle{
 		ExternalID: vehicle.VehicleID,
 		Provider:   providerName,
 		Latitude:   latitude,
 		Longitude:  longitude,
-		Type:       p.CAR,
-		FuelType:   p.ELECTRIC,
+		Type:       p.Car,
+		FuelType:   p.Electric,
 		Brand:      vehicle.MakeDesc,
-		Model:      p.EUP,
+		Model:      p.EUp,
 		Plate:      vehicle.PlateNumber,
-		Range:      int(estimatedRange),
+		Range:      estimatedRange,
 	}
 
 	return transformedVehicle

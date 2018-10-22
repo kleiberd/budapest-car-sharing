@@ -1,6 +1,7 @@
 package blinkee
 
 import (
+	"budapest-car-sharing-backend/collector/domain"
 	p "budapest-car-sharing-backend/collector/providers"
 	"fmt"
 )
@@ -15,8 +16,8 @@ func NewTransformer(responseData []Vehicle) *Transformer {
 	}
 }
 
-func (t *Transformer) Transform() ([]p.Vehicle, error) {
-	var vehicles []p.Vehicle
+func (t *Transformer) Transform() ([]domain.Vehicle, error) {
+	var vehicles []domain.Vehicle
 
 	for _, value := range t.responseData {
 		vehicles = append(vehicles, t.transformItem(value))
@@ -25,14 +26,14 @@ func (t *Transformer) Transform() ([]p.Vehicle, error) {
 	return vehicles, nil
 }
 
-func (t *Transformer) transformItem(vehicle Vehicle) p.Vehicle {
-	transformedVehicle := p.Vehicle{
+func (t *Transformer) transformItem(vehicle Vehicle) domain.Vehicle {
+	transformedVehicle := domain.Vehicle{
 		ExternalID: fmt.Sprintf("%d", vehicle.ID),
 		Provider:   providerName,
 		Latitude:   vehicle.Position.Lat,
 		Longitude:  vehicle.Position.Lng,
 		Type:       vehicle.Type,
-		FuelType:   p.ELECTRIC,
+		FuelType:   p.Electric,
 		Brand:      "Blinkee",
 		Model:      "Scooter",
 	}

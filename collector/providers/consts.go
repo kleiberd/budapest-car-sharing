@@ -1,11 +1,11 @@
 package providers
 
 const (
-	CAR      = "car"
-	PETROL   = "petrol"
-	ELECTRIC = "electric"
-	BRAND    = "brand"
-	MODEL    = "model"
-	FUELTYPE = "fuelType"
-	EUP      = "eUp"
+	Car      = "car"
+	Petrol   = "petrol"
+	Electric = "electric"
+	Brand    = "brand"
+	Model    = "model"
+	FuelType = "fuelType"
+	EUp      = "eUp"
 )

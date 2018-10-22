@@ -1,6 +1,7 @@
 package mollimo
 
 import (
+	"budapest-car-sharing-backend/collector/domain"
 	"budapest-car-sharing-backend/collector/providers"
 	"encoding/json"
 	"strings"
@@ -20,7 +21,7 @@ func NewProvider() *provider {
 	return &provider{client: providers.NewClient(endpointURL, referer, nil)}
 }
 
-func (p *provider) GetVehicles() ([]providers.Vehicle, error) {
+func (p *provider) GetVehicles() ([]domain.Vehicle, error) {
 	var responseData []Vehicle
 
 	responseBytes, _ := p.client.SendRequest()

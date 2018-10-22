@@ -1,5 +1,7 @@
 package providers
 
+import "budapest-car-sharing-backend/collector/domain"
+
 type Provider interface {
-	GetVehicles([]Vehicle, error)
+	GetVehicles() ([]domain.Vehicle, error)
 }

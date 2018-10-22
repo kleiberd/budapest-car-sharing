@@ -1,5 +1,5 @@
 ########### BUILD STAGE ###########
-FROM golang:1.10.3-alpine as builder
+FROM golang:1.11-alpine as builder
 
 ARG SUBDIR
 

@@ -1,6 +1,7 @@
 package greengo
 
 import (
+	"budapest-car-sharing-backend/collector/domain"
 	"budapest-car-sharing-backend/collector/providers"
 	"encoding/json"
 	"fmt"
@@ -28,7 +29,7 @@ func NewProvider() *provider {
 	return &provider{client: providers.NewClient(generateURL(), referer, header)}
 }
 
-func (p *provider) GetVehicles() ([]providers.Vehicle, error) {
+func (p *provider) GetVehicles() ([]domain.Vehicle, error) {
 	var responseData []Vehicle
 
 	response, err := p.client.SendRequest()
