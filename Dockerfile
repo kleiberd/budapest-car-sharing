@@ -6,7 +6,7 @@ ARG SUBDIR
 LABEL maintainer="David Kleiber <kleiberd93@gmail.com>"
 
 # install dependencies
-RUN apk update && apk add git ca-certificates
+RUN apk update && apk add bash ca-certificates git gcc g++ libc-dev
 
 # create backenduser
 RUN adduser -D -g '' backenduser

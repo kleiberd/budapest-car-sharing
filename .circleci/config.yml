@@ -5,7 +5,7 @@ machine:
         - docker
 
 jobs:
-    build:
+    build_api:
         machine: true
         steps:
             - checkout
@@ -34,3 +34,40 @@ jobs:
                     make DOCKER_USER="$DOCKERHUB_USER" DOCKER_PASS="$DOCKERHUB_PASSWORD" docker-login
                     make DOCKER_TAG=$CIRCLE_SHA1 docker-tag
                     make DOCKER_TAG=$CIRCLE_SHA1 docker-push
+
+    build_collector:
+        machine: true
+        steps:
+            - checkout
+            - run:
+                name: Build First Stage Container
+                command: |
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-build-builder-collector
+
+            - run:
+                name: Run tests
+                command: |
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-run-tests-collector
+
+            - run:
+                name: Copy artifact
+                command: |
+                    make DOCKER_TAG=$CIRCLE_SHA1 DOCKER_RUN_PARAMS=--volume="/artifacts/":"/artifacts/" docker-copy-artifact-collector
+
+            - store_artifacts:
+                path: /artifacts/collector
+
+            - run:
+                name: Push Docker image
+                command: |
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-build-collector
+                    make DOCKER_USER="$DOCKERHUB_USER" DOCKER_PASS="$DOCKERHUB_PASSWORD" docker-login
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-tag
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-push
+
+workflows:
+    version: 2
+    build:
+        jobs:
+            - build_api
+            - build_collector
