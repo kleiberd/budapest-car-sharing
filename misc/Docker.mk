@@ -54,6 +54,9 @@ docker-run-collector:
 docker-copy-artifact-api:
 	$(call docker,$(call DOCKER_RUN_FN,api,/bin/sh -c "$(CMD_MKDIR) artifacts && $(CMD_CP) /go/bin/api /artifacts/api"))
 
+docker-copy-artifact-collector:
+	$(call docker,$(call DOCKER_RUN_FN,collector,/bin/sh -c "$(CMD_MKDIR) artifacts && $(CMD_CP) /go/bin/collector /artifacts/collector"))
+
 docker-login:
 	$(call docker, echo "$(DOCKER_PASS)" | $(CMD_DOCKER_LOGIN) -u $(DOCKER_USER) --password-stdin)
 
