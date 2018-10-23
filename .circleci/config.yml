@@ -32,8 +32,8 @@ jobs:
                 command: |
                     make DOCKER_TAG=$CIRCLE_SHA1 docker-build-api
                     make DOCKER_USER="$DOCKERHUB_USER" DOCKER_PASS="$DOCKERHUB_PASSWORD" docker-login
-                    make DOCKER_TAG=$CIRCLE_SHA1 docker-tag
-                    make DOCKER_TAG=$CIRCLE_SHA1 docker-push
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-tag-api
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-push-api
 
     build_collector:
         machine: true
@@ -62,8 +62,8 @@ jobs:
                 command: |
                     make DOCKER_TAG=$CIRCLE_SHA1 docker-build-collector
                     make DOCKER_USER="$DOCKERHUB_USER" DOCKER_PASS="$DOCKERHUB_PASSWORD" docker-login
-                    make DOCKER_TAG=$CIRCLE_SHA1 docker-tag
-                    make DOCKER_TAG=$CIRCLE_SHA1 docker-push
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-tag-collector
+                    make DOCKER_TAG=$CIRCLE_SHA1 docker-push-collector
 
 workflows:
     version: 2

@@ -60,11 +60,17 @@ docker-copy-artifact-collector:
 docker-login:
 	$(call docker, echo "$(DOCKER_PASS)" | $(CMD_DOCKER_LOGIN) -u $(DOCKER_USER) --password-stdin)
 
-docker-tag:
+docker-tag-api:
 	$(call docker,$(call DOCKER_TAG_FN,api))
 
-docker-push:
+docker-tag-collector:
+	$(call docker,$(call DOCKER_TAG_FN,collector))
+
+docker-push-api:
 	$(call docker,$(call DOCKER_PUSH_FN,api))
+
+docker-push-collector:
+	$(call docker,$(call DOCKER_PUSH_FN,collector))
 
 help-docker:
 	@echo "$(TEXT_FORMAT_BOLD)docker-build-api$(TEXT_FORMAT_NORMAL)				- Build full API container"
