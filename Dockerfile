@@ -16,11 +16,11 @@ COPY $SUBDIR/. $GOPATH/src/budapest-car-sharing-backend/$SUBDIR
 WORKDIR $GOPATH/src/budapest-car-sharing-backend/$SUBDIR
 
 # install project dependencies
-RUN go get -u github.com/golang/dep/cmd/dep
+RUN go get -u github.com/golang/dep/cmd/dep github.com/gobuffalo/packr/...
 RUN dep ensure
 
 # build
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/$SUBDIR
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $GOPATH/bin/packr build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/$SUBDIR
 
 ########### FINAL STAGE ###########
 FROM scratch
